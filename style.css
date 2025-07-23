@@ -26,14 +26,15 @@ body, html {
 
 
 #chest {
-  width: 354.5px; /* половина ширины */
-  height: 246px;
+  width: 141.8px;
+  height: 98.4px;
   background-image: url("images/cases.png");
   background-size: 709px 246px;
   background-position: left center;
   background-repeat: no-repeat;
   cursor: pointer;
 }
+
 
 
 #chest.open {
