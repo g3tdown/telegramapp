@@ -150,77 +150,115 @@ h1 {
   pointer-events: auto;
 }
 
+/* --- Сбросим для мобильных --- */
 @media (max-width: 700px) {
+  body {
+    padding: 10px;
+  }
+  
   #mainContainer {
-    flex-direction: row; /* оставим горизонтальным */
+    position: relative;
+    height: 100vh;
+    display: flex;
     justify-content: flex-start;
-    align-items: flex-start;
+    align-items: center;
     gap: 20px;
   }
 
+  /* Левая колонка - сундук и улучшения */
   #leftSide {
-    flex: 0 0 auto;
-    width: 130px;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
+    flex: 0 0 140px;
+    position: relative;
+    top: -40px; /* чуть выше центра вертикально */
   }
 
   #chest {
-    width: 130px;
-    height: 45px; /* сохраняем пропорции сундука (709x246) */
-    background-size: 260% auto; /* увеличиваем, чтобы сундук был чётким */
+    width: 140px;
+    height: 48.5px; /* сохраняем пропорции сундука (709x246 -> ~140x48.5) */
+    background-size: 260% auto; /* чтобы не растягивалось криво */
+    border-radius: 8px;
   }
 
-  #rightSide {
-    display: none; /* скрываем правую панель с прокачками */
+  #chest.open {
+    background-position: right center;
   }
 
+  #upgrades {
+    width: 140px;
+  }
+
+  #upgrades h2 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+  }
+
+  #upgrades button {
+    width: 100%;
+    font-size: 0.9em;
+    padding: 7px 8px;
+    border-radius: 6px;
+    background-color: #007acc;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: background-color 0.3s;
+  }
+
+  #upgrades button:hover {
+    background-color: #005f88;
+  }
+
+  /* Центр: кнопка и счетчик — по центру экрана */
   #centerSide {
-    flex: 1 1 auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
-    order: 2;
+    gap: 15px;
+    z-index: 10;
+    width: auto;
   }
 
   #counterContainer {
+    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 5px;
   }
 
   #counter {
-    font-size: 3em;
+    font-size: 3.2em;
+    font-weight: 700;
   }
 
   #clickPowerLabel {
-    font-size: 1.2em;
+    font-size: 1.3em;
+    color: #555;
   }
 
   #clickButton {
     width: 160px;
     height: 160px;
-    font-size: 4.5em;
+    font-size: 5em;
+    border-radius: 50%;
+    border: none;
+    background: none; /* без фона */
+    cursor: pointer;
+    color: #0088cc;
+    box-shadow: none;
+    transition: color 0.3s;
+    user-select: none;
   }
 
-  /* Добавим прокачки под сундуком слева */
-  #leftSide #upgrades {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 100%;
-  }
-
-  #leftSide #upgrades button {
-    font-size: 0.9em;
-    padding: 8px;
-  }
-
-  /* Покажем прокачки под сундуком (переместим в leftSide) */
-  #leftSide #upgrades {
-    margin-top: 10px;
+  #clickButton:hover {
+    color: #005f88;
   }
 }
