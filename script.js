@@ -9,9 +9,30 @@ const clickButton = document.getElementById("clickButton");
 const chestDiv = document.getElementById("chest");
 const chestStatus = document.getElementById("chestStatus");
 
+const upgradeSettings = {
+  add1: { baseCost: 10, effect: 1 },
+  add5: { baseCost: 40, effect: 5 },
+  add10: { baseCost: 200, effect: 10 },
+  x2: { baseCost: 5000, effect: "x2" },
+  x3: { baseCost: 15000, effect: "x3" }
+};
+
+function getUpgradeCost(type) {
+  const level = upgrades[type] || 0;
+  return upgradeSettings[type].baseCost * Math.pow(5, level);
+}
+
 function updateDisplay() {
   counter.textContent = clicks;
   powerLabel.textContent = `+${clickPower}`;
+  document.querySelectorAll("#upgrades button").forEach(btn => {
+    const type = btn.dataset.upgrade;
+    const cost = getUpgradeCost(type);
+    const label = upgradeSettings[type].effect.toString().includes("x")
+      ? `${upgradeSettings[type].effect} сила`
+      : `+${upgradeSettings[type].effect} клик(ов)`;
+    btn.textContent = `${label} (${cost})`;
+  });
 }
 
 function saveState() {
@@ -30,39 +51,17 @@ clickButton.addEventListener("click", () => {
 document.querySelectorAll("#upgrades button").forEach(btn => {
   btn.addEventListener("click", () => {
     const type = btn.dataset.upgrade;
-    let cost, effect;
-
-    switch (type) {
-      case "add1":
-        cost = 10 * (upgrades.add1 || 1);
-        effect = 1;
-        if (clicks >= cost) {
-          clicks -= cost;
-          clickPower += effect;
-          upgrades.add1 = (upgrades.add1 || 1) + 1;
-        }
-        break;
-      case "add5":
-        cost = 40 * (upgrades.add5 || 1);
-        effect = 5;
-        if (clicks >= cost) {
-          clicks -= cost;
-          clickPower += effect;
-          upgrades.add5 = (upgrades.add5 || 1) + 1;
-        }
-        break;
-      case "x2":
-        cost = 100 * (upgrades.x2 || 1);
-        if (clicks >= cost) {
-          clicks -= cost;
-          clickPower *= 2;
-          upgrades.x2 = (upgrades.x2 || 1) + 1;
-        }
-        break;
+    const cost = getUpgradeCost(type);
+    if (clicks >= cost) {
+      clicks -= cost;
+      const effect = upgradeSettings[type].effect;
+      if (effect === "x2") clickPower *= 2;
+      else if (effect === "x3") clickPower *= 3;
+      else clickPower += effect;
+      upgrades[type] = (upgrades[type] || 0) + 1;
+      updateDisplay();
+      saveState();
     }
-
-    updateDisplay();
-    saveState();
   });
 });
 
