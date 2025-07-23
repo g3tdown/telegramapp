@@ -149,3 +149,54 @@ h1 {
   opacity: 1;
   pointer-events: auto;
 }
+
+/* --- Мобильная адаптация --- */
+@media (max-width: 700px) {
+  #mainContainer {
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+  }
+
+  #leftSide, #centerSide, #rightSide {
+    width: 100%;
+    max-width: 400px;
+    padding: 15px;
+  }
+
+  #leftSide {
+    order: 1;
+  }
+
+  #centerSide {
+    order: 2;
+  }
+
+  #rightSide {
+    order: 3;
+  }
+
+  #chest {
+    width: 280px;
+    height: 193px; /* пропорции 709x246 scaled down */
+  }
+
+  #clickButton {
+    width: 120px;
+    height: 120px;
+    font-size: 3em;
+  }
+
+  #counter {
+    font-size: 2.2em;
+  }
+
+  #clickPowerLabel {
+    font-size: 1em;
+  }
+
+  #upgrades button {
+    font-size: 1em;
+    padding: 10px;
+  }
+}
