@@ -4,7 +4,7 @@ let lastChestOpen = localStorage.getItem("lastChestOpen") || null;
 
 function updateDisplay() {
   document.getElementById("counter").textContent = count;
-  document.getElementById("clickPower").textContent = clickPower;
+  document.getElementById("clickPowerLabel").textContent = `+${clickPower}`;
   updateChestStatus();
 }
 
@@ -14,17 +14,27 @@ function increment() {
   updateDisplay();
 }
 
-function buyUpgrade() {
-  if (count >= 10) {
+function buyUpgrade(type) {
+  if (type === "add1" && count >= 10) {
     count -= 10;
-    clickPower++;
-    localStorage.setItem("clickCount", count);
-    localStorage.setItem("clickPower", clickPower);
-    showNotification("Апгрейд куплен! 💪");
-    updateDisplay();
+    clickPower += 1;
+    notify("Сила клика увеличена на +1!");
+  } else if (type === "add5" && count >= 40) {
+    count -= 40;
+    clickPower += 5;
+    notify("Сила клика увеличена на +5!");
+  } else if (type === "x2" && count >= 100) {
+    count -= 100;
+    clickPower *= 2;
+    notify("Сила клика УДВОЕНА! 🚀");
   } else {
-    showNotification("Недостаточно кликов!");
+    notify("Недостаточно кликов для покупки.");
+    return;
   }
+
+  localStorage.setItem("clickCount", count);
+  localStorage.setItem("clickPower", clickPower);
+  updateDisplay();
 }
 
 function openChest() {
@@ -35,11 +45,11 @@ function openChest() {
     lastChestOpen = now.toISOString();
     localStorage.setItem("clickCount", count);
     localStorage.setItem("lastChestOpen", lastChestOpen);
-    showNotification(`Вы получили ${bonus} кликов из сундука! 🎁`);
+    notify(`Вы получили ${bonus} кликов из сундука! 🎁`);
     updateDisplay();
   } else {
     const hoursLeft = Math.ceil((86400000 - (now - new Date(lastChestOpen))) / 3600000);
-    showNotification(`Сундук будет доступен через ~${hoursLeft} ч.`);
+    notify(`Сундук будет доступен через ~${hoursLeft} ч.`);
   }
 }
 
@@ -60,23 +70,22 @@ function updateChestStatus() {
   }
 }
 
-function showNotification(message) {
+function notify(message) {
   const note = document.getElementById("notification");
   note.textContent = message;
   note.classList.add("show");
-
-  setTimeout(() => {
-    note.classList.remove("show");
-  }, 3000);
+  setTimeout(() => note.classList.remove("show"), 3000);
 }
 
+// Инициализация событий
 document.getElementById("clickButton").addEventListener("click", increment);
-document.getElementById("upgradeButton").addEventListener("click", buyUpgrade);
+document.querySelectorAll("#upgrades button").forEach(btn => {
+  btn.addEventListener("click", () => buyUpgrade(btn.dataset.upgrade));
+});
 document.getElementById("chestButton").addEventListener("click", openChest);
 
-updateDisplay();
-
-// Telegram WebApp SDK
+// Telegram SDK
 const tg = window.Telegram.WebApp;
 tg.expand();
 
+updateDisplay();
