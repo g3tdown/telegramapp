@@ -1,96 +1,76 @@
-body {
-  font-family: sans-serif;
-  text-align: center;
-  background: #f2f2f2;
+* {
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-h1 {
-  font-size: 2.2em;
-  margin-bottom: 20px;
+body, html {
+  height: 100%;
+  width: 100%;
+  font-family: sans-serif;
+  background-color: #f4f4f4;
+  overflow: hidden;
 }
 
 #mainContainer {
   display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 40px;
-  max-width: 1000px;
-  margin: 0 auto;
+  height: 100%;
+  width: 100%;
+  position: relative;
 }
 
-#leftSide, #centerSide, #rightSide {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
-}
-
+/* Левая панель */
 #leftSide {
-  flex: 0 0 380px;
-}
-
-#centerSide {
-  flex: 0 0 200px;
+  position: absolute;
+  left: 10px;
+  top: 45%;
+  transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 20px;
+  align-items: flex-start;
+  gap: 12px;
+  width: 140px;
+  z-index: 10;
 }
 
-#rightSide {
-  flex: 1;
-  max-width: 300px;
-  text-align: left;
-}
-
-#counterContainer {
-  display: flex;
-  justify-content: center;
-  align-items: baseline;
-  gap: 10px;
-}
-
-#counter {
-  font-size: 3em;
-  font-weight: 700;
-}
-
-#clickPowerLabel {
-  font-size: 1.1em;
-  color: #666;
-  margin-top: 10px;
-}
-
-#clickButton {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background-color: #0088cc;
-  color: white;
-  font-size: 4em;
-  border: none;
+#chest {
+  width: 140px;
+  height: 48.5px;
+  background-image: url("images/cases.png");
+  background-size: 200% auto;
+  background-position: left center;
+  background-repeat: no-repeat;
   cursor: pointer;
-  box-shadow: 0 8px 15px rgba(0,136,204,0.5);
-  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-#clickButton:hover {
-  background-color: #005f88;
-  box-shadow: 0 10px 20px rgba(0,95,136,0.7);
+#chest.open {
+  background-position: right center;
+}
+
+#chestStatus {
+  font-size: 0.8em;
+  color: #444;
+}
+
+/* Улучшения */
+#upgrades {
+  width: 100%;
+}
+
+#upgrades h2 {
+  font-size: 1em;
+  margin-bottom: 8px;
 }
 
 #upgrades button {
-  display: block;
   width: 100%;
-  margin-bottom: 15px;
-  padding: 12px;
-  font-size: 1.1em;
+  margin-bottom: 6px;
+  font-size: 0.9em;
+  padding: 7px;
   border: none;
-  border-radius: 8px;
   background-color: #007acc;
   color: white;
+  border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -99,166 +79,42 @@ h1 {
   background-color: #005f88;
 }
 
-#chestSection {
-  text-align: center;
-}
-
-#chest {
-  width: 355px;
-  height: 246px;
-  background-image: url('images/cases.png');
-  background-position: left center;
-  background-repeat: no-repeat;
-  cursor: pointer;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
-  transition: background-position 0.3s ease;
-  margin: 0 auto;
-}
-
-#chest.open {
-  background-position: right center;
-}
-
-#chestStatus {
-  margin-top: 10px;
-  font-size: 1.2em;
-  color: #333;
-  font-weight: 600;
-}
-
-#notification {
-  position: fixed;
-  bottom: 30px;
+/* Центр */
+#centerSide {
+  position: absolute;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  background: #323232;
-  color: white;
-  padding: 15px 30px;
-  border-radius: 10px;
-  font-size: 1.1em;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 999;
-  max-width: 90vw;
-  word-break: break-word;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 5;
 }
 
-#notification.show {
-  opacity: 1;
-  pointer-events: auto;
+#counter {
+  font-size: 3em;
+  font-weight: bold;
+  color: #333;
 }
 
-/* --- Сбросим для мобильных --- */
-@media (max-width: 700px) {
-  body {
-    padding: 10px;
-  }
-  
-  #mainContainer {
-    position: relative;
-    height: 100vh;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 20px;
-  }
+#clickPowerLabel {
+  font-size: 1.2em;
+  color: #777;
+  margin-bottom: 10px;
+}
 
-  /* Левая колонка - сундук и улучшения */
-  #leftSide {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-    flex: 0 0 140px;
-    position: relative;
-    top: -40px; /* чуть выше центра вертикально */
-  }
+/* Кнопка клика */
+#clickButton {
+  width: 160px;
+  height: 160px;
+  font-size: 4em;
+  border-radius: 50%;
+  border: none;
+  background: none;
+  color: #0088cc;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s;
+}
 
-  #chest {
-    width: 140px;
-    height: 48.5px; /* сохраняем пропорции сундука (709x246 -> ~140x48.5) */
-    background-size: 260% auto; /* чтобы не растягивалось криво */
-    border-radius: 8px;
-  }
-
-  #chest.open {
-    background-position: right center;
-  }
-
-  #upgrades {
-    width: 140px;
-  }
-
-  #upgrades h2 {
-    font-size: 1.1em;
-    margin-bottom: 10px;
-  }
-
-  #upgrades button {
-    width: 100%;
-    font-size: 0.9em;
-    padding: 7px 8px;
-    border-radius: 6px;
-    background-color: #007acc;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-bottom: 8px;
-    transition: background-color 0.3s;
-  }
-
-  #upgrades button:hover {
-    background-color: #005f88;
-  }
-
-  /* Центр: кнопка и счетчик — по центру экрана */
-  #centerSide {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    z-index: 10;
-    width: auto;
-  }
-
-  #counterContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 5px;
-  }
-
-  #counter {
-    font-size: 3.2em;
-    font-weight: 700;
-  }
-
-  #clickPowerLabel {
-    font-size: 1.3em;
-    color: #555;
-  }
-
-  #clickButton {
-    width: 160px;
-    height: 160px;
-    font-size: 5em;
-    border-radius: 50%;
-    border: none;
-    background: none; /* без фона */
-    cursor: pointer;
-    color: #0088cc;
-    box-shadow: none;
-    transition: color 0.3s;
-    user-select: none;
-  }
-
-  #clickButton:hover {
-    color: #005f88;
-  }
+#clickButton:hover {
+  color: #005f88;
 }
