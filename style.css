@@ -3,12 +3,46 @@ body {
   text-align: center;
   background: #f2f2f2;
   margin: 0;
-  padding: 30px;
+  padding: 20px;
 }
 
-h1, h2 {
-  font-size: 2em;
-  margin-top: 30px;
+h1 {
+  font-size: 2.2em;
+  margin-bottom: 20px;
+}
+
+#mainContainer {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+#leftSide, #centerSide, #rightSide {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+#leftSide {
+  flex: 0 0 380px;
+}
+
+#centerSide {
+  flex: 0 0 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+#rightSide {
+  flex: 1;
+  max-width: 300px;
+  text-align: left;
 }
 
 #counterContainer {
@@ -16,69 +50,83 @@ h1, h2 {
   justify-content: center;
   align-items: baseline;
   gap: 10px;
-  margin: 20px 0;
 }
 
 #counter {
   font-size: 3em;
+  font-weight: 700;
 }
 
 #clickPowerLabel {
-  font-size: 1em;
+  font-size: 1.1em;
   color: #666;
   margin-top: 10px;
 }
 
-button {
-  font-size: 1.2em;
-  padding: 10px 20px;
-  border: none;
+#clickButton {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
   background-color: #0088cc;
   color: white;
-  border-radius: 10px;
+  font-size: 4em;
+  border: none;
   cursor: pointer;
-  margin: 10px;
-  transition: background-color 0.2s;
+  box-shadow: 0 8px 15px rgba(0,136,204,0.5);
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
-button:hover {
-  background-color: #0077b3;
+#clickButton:hover {
+  background-color: #005f88;
+  box-shadow: 0 10px 20px rgba(0,95,136,0.7);
 }
 
 #upgrades button {
   display: block;
-  margin: 10px auto;
-  width: 250px;
+  width: 100%;
+  margin-bottom: 15px;
+  padding: 12px;
+  font-size: 1.1em;
+  border: none;
+  border-radius: 8px;
+  background-color: #007acc;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#upgrades button:hover {
+  background-color: #005f88;
 }
 
 #chestSection {
-  margin-top: 20px;
+  text-align: center;
 }
 
 #chest {
-  width: 355px;       /* половина ширины */
-  height: 246px;      /* высота изображения */
-  margin: 0 auto;
+  width: 355px;
+  height: 246px;
   background-image: url('images/cases.png');
-  background-position: left center;  /* закрытый сундук */
+  background-position: left center;
   background-repeat: no-repeat;
   cursor: pointer;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
   transition: background-position 0.3s ease;
-  border-radius: 10px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+  margin: 0 auto;
 }
 
 #chest.open {
-  background-position: right center; /* открытый сундук */
+  background-position: right center;
 }
-
 
 #chestStatus {
   margin-top: 10px;
-  font-size: 1em;
+  font-size: 1.2em;
+  color: #333;
+  font-weight: 600;
 }
 
-/* Уведомление */
 #notification {
   position: fixed;
   bottom: 30px;
@@ -93,9 +141,11 @@ button:hover {
   pointer-events: none;
   transition: opacity 0.3s ease;
   z-index: 999;
+  max-width: 90vw;
+  word-break: break-word;
 }
 
 #notification.show {
   opacity: 1;
+  pointer-events: auto;
 }
-
