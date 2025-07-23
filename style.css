@@ -45,15 +45,36 @@ button:hover {
   background-color: #0077b3;
 }
 
-#chestStatus {
-  margin-top: 10px;
-  font-size: 1em;
-}
-
 #upgrades button {
   display: block;
   margin: 10px auto;
   width: 250px;
+}
+
+#chestSection {
+  margin-top: 20px;
+}
+
+#chest {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+  background-image: url('images/cases.png');
+  background-position: left center; /* закрытый сундук */
+  background-repeat: no-repeat;
+  cursor: pointer;
+  transition: background-position 0.3s ease;
+  border-radius: 10px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+#chest.open {
+  background-position: right center; /* открытый сундук */
+}
+
+#chestStatus {
+  margin-top: 10px;
+  font-size: 1em;
 }
 
 /* Уведомление */
@@ -76,3 +97,4 @@ button:hover {
 #notification.show {
   opacity: 1;
 }
+
