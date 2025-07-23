@@ -2,7 +2,19 @@ let count = parseInt(localStorage.getItem("clickCount")) || 0;
 let clickPower = parseInt(localStorage.getItem("clickPower")) || 1;
 let lastChestOpen = localStorage.getItem("lastChestOpen") || null;
 
-let upgradePrices = JSON.parse(localStorage.getItem("upgradePrices")) || {
+// Используем прогрессию цен с экспонентой
+let upgradeLevels = JSON.parse(localStorage.getItem("upgradeLevels")) || {
+  add1: 0,
+  add5: 0,
+  x2: 0
+};
+
+function calculatePrice(base, level) {
+  // Цена растёт экспоненциально: base * (1.8 ^ level)
+  return Math.floor(base * Math.pow(1.8, level));
+}
+
+const basePrices = {
   add1: 10,
   add5: 40,
   x2: 100
@@ -32,38 +44,43 @@ function increment() {
 }
 
 function buyUpgrade(type) {
-  const price = upgradePrices[type];
+  const level = upgradeLevels[type];
+  const price = calculatePrice(basePrices[type], level);
 
   if (count >= price) {
     count -= price;
 
     if (type === "add1") {
       clickPower += 1;
-      upgradePrices.add1 += 5;
-      notify("Сила клика +1!");
     } else if (type === "add5") {
       clickPower += 5;
-      upgradePrices.add5 += 20;
-      notify("Сила клика +5!");
     } else if (type === "x2") {
       clickPower *= 2;
-      upgradePrices.x2 *= 2;
-      notify("Сила клика x2! 🚀");
     }
+
+    upgradeLevels[type] += 1;
 
     localStorage.setItem("clickCount", count);
     localStorage.setItem("clickPower", clickPower);
-    localStorage.setItem("upgradePrices", JSON.stringify(upgradePrices));
+    localStorage.setItem("upgradeLevels", JSON.stringify(upgradeLevels));
+    notify(`Улучшение "${type}" куплено!`);
     updateDisplay();
   } else {
-    notify(`Нужно ${price} кликов`);
+    notify(`Нужно ${price} кликов для покупки`);
   }
 }
 
 function updateUpgradeButtons() {
-  document.querySelector('[data-upgrade="add1"]').textContent = `+1 клик (${upgradePrices.add1} кликов)`;
-  document.querySelector('[data-upgrade="add5"]').textContent = `+5 кликов (${upgradePrices.add5} кликов)`;
-  document.querySelector('[data-upgrade="x2"]').textContent = `x2 сила (${upgradePrices.x2} кликов)`;
+  for (const type in upgradeLevels) {
+    const btn = document.querySelector(`[data-upgrade="${type}"]`);
+    const level = upgradeLevels[type];
+    const price = calculatePrice(basePrices[type], level);
+    let label = "";
+    if (type === "add1") label = `+1 клик (${price} кликов)`;
+    else if (type === "add5") label = `+5 кликов (${price} кликов)`;
+    else if (type === "x2") label = `x2 сила (${price} кликов)`;
+    btn.textContent = label;
+  }
 }
 
 function updateChestStatus() {
@@ -121,10 +138,6 @@ document.querySelectorAll("#upgrades button").forEach(btn => {
 });
 chestDiv.addEventListener("click", openChest);
 
-const tg = window.Telegram.WebApp;
-if (tg) tg.expand();
-
 updateDisplay();
-
-// Обновляем статус сундука каждую секунду для таймера
 setInterval(updateChestStatus, 1000);
+
