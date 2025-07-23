@@ -150,53 +150,77 @@ h1 {
   pointer-events: auto;
 }
 
-/* --- Мобильная адаптация --- */
 @media (max-width: 700px) {
   #mainContainer {
-    flex-direction: column;
-    align-items: center;
-    gap: 25px;
-  }
-
-  #leftSide, #centerSide, #rightSide {
-    width: 100%;
-    max-width: 400px;
-    padding: 15px;
+    flex-direction: row; /* оставим горизонтальным */
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 20px;
   }
 
   #leftSide {
-    order: 1;
-  }
-
-  #centerSide {
-    order: 2;
-  }
-
-  #rightSide {
-    order: 3;
+    flex: 0 0 auto;
+    width: 130px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
   }
 
   #chest {
-    width: 280px;
-    height: 193px; /* пропорции 709x246 scaled down */
+    width: 130px;
+    height: 45px; /* сохраняем пропорции сундука (709x246) */
+    background-size: 260% auto; /* увеличиваем, чтобы сундук был чётким */
   }
 
-  #clickButton {
-    width: 120px;
-    height: 120px;
-    font-size: 3em;
+  #rightSide {
+    display: none; /* скрываем правую панель с прокачками */
+  }
+
+  #centerSide {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    order: 2;
+  }
+
+  #counterContainer {
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
   }
 
   #counter {
-    font-size: 2.2em;
+    font-size: 3em;
   }
 
   #clickPowerLabel {
-    font-size: 1em;
+    font-size: 1.2em;
   }
 
-  #upgrades button {
-    font-size: 1em;
-    padding: 10px;
+  #clickButton {
+    width: 160px;
+    height: 160px;
+    font-size: 4.5em;
+  }
+
+  /* Добавим прокачки под сундуком слева */
+  #leftSide #upgrades {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+
+  #leftSide #upgrades button {
+    font-size: 0.9em;
+    padding: 8px;
+  }
+
+  /* Покажем прокачки под сундуком (переместим в leftSide) */
+  #leftSide #upgrades {
+    margin-top: 10px;
   }
 }
