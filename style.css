@@ -36,3 +36,24 @@ button:hover {
   margin-top: 10px;
   font-size: 1em;
 }
+
+/* Уведомление */
+#notification {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #323232;
+  color: white;
+  padding: 15px 30px;
+  border-radius: 10px;
+  font-size: 1.2em;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 999;
+}
+
+#notification.show {
+  opacity: 1;
+}
