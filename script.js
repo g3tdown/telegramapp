@@ -2,12 +2,13 @@ let count = parseInt(localStorage.getItem("clickCount")) || 0;
 let clickPower = parseInt(localStorage.getItem("clickPower")) || 1;
 let lastChestOpen = localStorage.getItem("lastChestOpen") || null;
 
-// Начальные цены и загрузка из localStorage
 let upgradePrices = JSON.parse(localStorage.getItem("upgradePrices")) || {
   add1: 10,
   add5: 40,
   x2: 100
 };
+
+const chestDiv = document.getElementById("chest");
 
 function updateDisplay() {
   document.getElementById("counter").textContent = count;
@@ -42,7 +43,6 @@ function buyUpgrade(type) {
       notify("Сила клика x2! 🚀");
     }
 
-    // Сохраняем
     localStorage.setItem("clickCount", count);
     localStorage.setItem("clickPower", clickPower);
     localStorage.setItem("upgradePrices", JSON.stringify(upgradePrices));
@@ -68,9 +68,20 @@ function openChest() {
     localStorage.setItem("lastChestOpen", lastChestOpen);
     notify(`Вы получили ${bonus} кликов из сундука! 🎁`);
     updateDisplay();
+    showChestOpen(true);
   } else {
     const hoursLeft = Math.ceil((86400000 - (now - new Date(lastChestOpen))) / 3600000);
     notify(`Сундук будет доступен через ~${hoursLeft} ч.`);
+    showChestOpen(false);
+  }
+}
+
+function showChestOpen(opened) {
+  if (opened) {
+    chestDiv.classList.add("open");
+    setTimeout(() => chestDiv.classList.remove("open"), 3000);
+  } else {
+    chestDiv.classList.remove("open");
   }
 }
 
@@ -98,14 +109,12 @@ function notify(message) {
   setTimeout(() => note.classList.remove("show"), 3000);
 }
 
-// События
 document.getElementById("clickButton").addEventListener("click", increment);
 document.querySelectorAll("#upgrades button").forEach(btn => {
   btn.addEventListener("click", () => buyUpgrade(btn.dataset.upgrade));
 });
-document.getElementById("chestButton").addEventListener("click", openChest);
+chestDiv.addEventListener("click", openChest);
 
-// Telegram SDK
 const tg = window.Telegram.WebApp;
 tg.expand();
 
