@@ -26,14 +26,15 @@ body, html {
 
 
 #chest {
-  width: 120px;
-  height: 41.7px; /* пропорция 709x246 */
+  width: 354.5px; /* половина ширины */
+  height: 246px;
   background-image: url("images/cases.png");
-  background-size: 200% auto;
+  background-size: 709px 246px;
   background-position: left center;
   background-repeat: no-repeat;
   cursor: pointer;
 }
+
 
 #chest.open {
   background-position: right center;
@@ -59,7 +60,7 @@ body, html {
 /* Центр: счётчик и кнопка */
 #center {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 100px;
 }
 
 #counter {
