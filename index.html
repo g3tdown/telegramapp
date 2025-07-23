@@ -7,14 +7,20 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Симулятор Кликера</h1>
-  <div id="counter">0</div>
+  <h1>WaveClicker</h1>
+
+  <div id="counterContainer">
+    <div id="counter">0</div>
+    <div id="clickPowerLabel">+1</div>
+  </div>
+
   <button id="clickButton">Кликнуть</button>
 
   <h2>Улучшения</h2>
   <div id="upgrades">
-    <button id="upgradeButton">Купить апгрейд (10 кликов)</button>
-    <p>Сила клика: <span id="clickPower">1</span></p>
+    <button data-upgrade="add1">+1 клик (10 кликов)</button>
+    <button data-upgrade="add5">+5 кликов (40 кликов)</button>
+    <button data-upgrade="x2">x2 сила (100 кликов)</button>
   </div>
 
   <h2>Сундук</h2>
@@ -23,7 +29,7 @@
     <p id="chestStatus"></p>
   </div>
 
-  <!-- Контейнер уведомлений -->
+  <!-- Уведомления -->
   <div id="notification" class="hidden"></div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
