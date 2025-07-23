@@ -10,11 +10,12 @@ let upgradePrices = JSON.parse(localStorage.getItem("upgradePrices")) || {
 
 const chestDiv = document.getElementById("chest");
 
-function formatTime(date) {
-  const h = date.getHours().toString().padStart(2, '0');
-  const m = date.getMinutes().toString().padStart(2, '0');
-  const s = date.getSeconds().toString().padStart(2, '0');
-  return `${h}:${m}:${s}`;
+function formatTimeLeft(ms) {
+  const totalSeconds = Math.floor(ms / 1000);
+  const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
+  const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
+  const seconds = (totalSeconds % 60).toString().padStart(2, '0');
+  return `${hours}:${minutes}:${seconds}`;
 }
 
 function updateDisplay() {
@@ -78,12 +79,12 @@ function updateChestStatus() {
   const last = new Date(lastChestOpen);
   const diff = now - last;
 
-  if (diff >= 86400000) { // прошло 24 часа
+  if (diff >= 86400000) {
     chestStatus.textContent = "Сундук доступен!";
     chestDiv.classList.remove("open");
   } else {
-    const nextOpenTime = new Date(last.getTime() + 86400000);
-    chestStatus.textContent = `Сундук будет доступен в ${formatTime(nextOpenTime)}`;
+    const timeLeft = 86400000 - diff;
+    chestStatus.textContent = `Доступно через ${formatTimeLeft(timeLeft)}`;
     chestDiv.classList.add("open");
   }
 }
@@ -92,7 +93,7 @@ function openChest() {
   const now = new Date();
 
   if (!lastChestOpen || (now - new Date(lastChestOpen)) >= 86400000) {
-    const bonus = Math.floor(Math.random() * 20) + 10; // 10–30
+    const bonus = Math.floor(Math.random() * 20) + 10;
     count += bonus;
     lastChestOpen = now.toISOString();
     localStorage.setItem("clickCount", count);
@@ -102,8 +103,8 @@ function openChest() {
     chestDiv.classList.add("open");
   } else {
     const last = new Date(lastChestOpen);
-    const nextOpenTime = new Date(last.getTime() + 86400000);
-    notify(`Сундук будет доступен в ${formatTime(nextOpenTime)}`);
+    const timeLeft = 86400000 - (now - last);
+    notify(`Сундук будет доступен через ${formatTimeLeft(timeLeft)}`);
   }
 }
 
@@ -125,4 +126,5 @@ if (tg) tg.expand();
 
 updateDisplay();
 
+// Обновляем статус сундука каждую секунду для таймера
 setInterval(updateChestStatus, 1000);
