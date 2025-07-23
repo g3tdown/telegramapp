@@ -2,10 +2,18 @@ let count = parseInt(localStorage.getItem("clickCount")) || 0;
 let clickPower = parseInt(localStorage.getItem("clickPower")) || 1;
 let lastChestOpen = localStorage.getItem("lastChestOpen") || null;
 
+// Начальные цены и загрузка из localStorage
+let upgradePrices = JSON.parse(localStorage.getItem("upgradePrices")) || {
+  add1: 10,
+  add5: 40,
+  x2: 100
+};
+
 function updateDisplay() {
   document.getElementById("counter").textContent = count;
   document.getElementById("clickPowerLabel").textContent = `+${clickPower}`;
   updateChestStatus();
+  updateUpgradeButtons();
 }
 
 function increment() {
@@ -15,26 +23,39 @@ function increment() {
 }
 
 function buyUpgrade(type) {
-  if (type === "add1" && count >= 10) {
-    count -= 10;
-    clickPower += 1;
-    notify("Сила клика увеличена на +1!");
-  } else if (type === "add5" && count >= 40) {
-    count -= 40;
-    clickPower += 5;
-    notify("Сила клика увеличена на +5!");
-  } else if (type === "x2" && count >= 100) {
-    count -= 100;
-    clickPower *= 2;
-    notify("Сила клика УДВОЕНА! 🚀");
-  } else {
-    notify("Недостаточно кликов для покупки.");
-    return;
-  }
+  const price = upgradePrices[type];
 
-  localStorage.setItem("clickCount", count);
-  localStorage.setItem("clickPower", clickPower);
-  updateDisplay();
+  if (count >= price) {
+    count -= price;
+
+    if (type === "add1") {
+      clickPower += 1;
+      upgradePrices.add1 += 5;
+      notify("Сила клика +1!");
+    } else if (type === "add5") {
+      clickPower += 5;
+      upgradePrices.add5 += 20;
+      notify("Сила клика +5!");
+    } else if (type === "x2") {
+      clickPower *= 2;
+      upgradePrices.x2 *= 2;
+      notify("Сила клика x2! 🚀");
+    }
+
+    // Сохраняем
+    localStorage.setItem("clickCount", count);
+    localStorage.setItem("clickPower", clickPower);
+    localStorage.setItem("upgradePrices", JSON.stringify(upgradePrices));
+    updateDisplay();
+  } else {
+    notify(`Нужно ${price} кликов`);
+  }
+}
+
+function updateUpgradeButtons() {
+  document.querySelector('[data-upgrade="add1"]').textContent = `+1 клик (${upgradePrices.add1} кликов)`;
+  document.querySelector('[data-upgrade="add5"]').textContent = `+5 кликов (${upgradePrices.add5} кликов)`;
+  document.querySelector('[data-upgrade="x2"]').textContent = `x2 сила (${upgradePrices.x2} кликов)`;
 }
 
 function openChest() {
@@ -77,7 +98,7 @@ function notify(message) {
   setTimeout(() => note.classList.remove("show"), 3000);
 }
 
-// Инициализация событий
+// События
 document.getElementById("clickButton").addEventListener("click", increment);
 document.querySelectorAll("#upgrades button").forEach(btn => {
   btn.addEventListener("click", () => buyUpgrade(btn.dataset.upgrade));
