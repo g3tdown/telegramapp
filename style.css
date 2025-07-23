@@ -56,11 +56,11 @@ button:hover {
 }
 
 #chest {
-  width: 100px;
-  height: 100px;
+  width: 355px;       /* половина ширины */
+  height: 246px;      /* высота изображения */
   margin: 0 auto;
   background-image: url('images/cases.png');
-  background-position: left center; /* закрытый сундук */
+  background-position: left center;  /* закрытый сундук */
   background-repeat: no-repeat;
   cursor: pointer;
   transition: background-position 0.3s ease;
@@ -71,6 +71,7 @@ button:hover {
 #chest.open {
   background-position: right center; /* открытый сундук */
 }
+
 
 #chestStatus {
   margin-top: 10px;
