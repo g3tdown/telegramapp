@@ -2,12 +2,12 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Кликер</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Кликер с сундуком</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>WaveClicker</h1>
+  <h1>Симулятор Кликера</h1>
 
   <div id="counterContainer">
     <div id="counter">0</div>
@@ -25,11 +25,10 @@
 
   <h2>Сундук</h2>
   <div id="chestSection">
-    <button id="chestButton">Открыть сундук</button>
+    <div id="chest" title="Кликни, чтобы открыть сундук"></div>
     <p id="chestStatus"></p>
   </div>
 
-  <!-- Уведомления -->
   <div id="notification" class="hidden"></div>
 
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
