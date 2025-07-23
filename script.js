@@ -1,92 +1,81 @@
-let count = parseInt(localStorage.getItem("clickCount")) || 0;
-let clickPower = parseInt(localStorage.getItem("clickPower")) || 1;
-let lastChestOpen = localStorage.getItem("lastChestOpen") || null;
+let clicks = parseInt(localStorage.getItem("clicks") || "0");
+let clickPower = parseInt(localStorage.getItem("clickPower") || "1");
+let upgrades = JSON.parse(localStorage.getItem("upgrades") || "{}");
+let lastChestOpen = localStorage.getItem("lastChestOpen");
 
-// Используем прогрессию цен с экспонентой
-let upgradeLevels = JSON.parse(localStorage.getItem("upgradeLevels")) || {
-  add1: 0,
-  add5: 0,
-  x2: 0
-};
-
-function calculatePrice(base, level) {
-  // Цена растёт экспоненциально: base * (1.8 ^ level)
-  return Math.floor(base * Math.pow(1.8, level));
-}
-
-const basePrices = {
-  add1: 10,
-  add5: 40,
-  x2: 100
-};
-
+const counter = document.getElementById("counter");
+const powerLabel = document.getElementById("clickPowerLabel");
+const clickButton = document.getElementById("clickButton");
 const chestDiv = document.getElementById("chest");
-
-function formatTimeLeft(ms) {
-  const totalSeconds = Math.floor(ms / 1000);
-  const hours = Math.floor(totalSeconds / 3600).toString().padStart(2, '0');
-  const minutes = Math.floor((totalSeconds % 3600) / 60).toString().padStart(2, '0');
-  const seconds = (totalSeconds % 60).toString().padStart(2, '0');
-  return `${hours}:${minutes}:${seconds}`;
-}
+const chestStatus = document.getElementById("chestStatus");
 
 function updateDisplay() {
-  document.getElementById("counter").textContent = count;
-  document.getElementById("clickPowerLabel").textContent = `+${clickPower}`;
-  updateChestStatus();
-  updateUpgradeButtons();
+  counter.textContent = clicks;
+  powerLabel.textContent = `+${clickPower}`;
 }
 
-function increment() {
-  count += clickPower;
-  localStorage.setItem("clickCount", count);
+function saveState() {
+  localStorage.setItem("clicks", clicks);
+  localStorage.setItem("clickPower", clickPower);
+  localStorage.setItem("upgrades", JSON.stringify(upgrades));
+  localStorage.setItem("lastChestOpen", lastChestOpen || "");
+}
+
+clickButton.addEventListener("click", () => {
+  clicks += clickPower;
   updateDisplay();
-}
+  saveState();
+});
 
-function buyUpgrade(type) {
-  const level = upgradeLevels[type];
-  const price = calculatePrice(basePrices[type], level);
+document.querySelectorAll("#upgrades button").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const type = btn.dataset.upgrade;
+    let cost, effect;
 
-  if (count >= price) {
-    count -= price;
-
-    if (type === "add1") {
-      clickPower += 1;
-    } else if (type === "add5") {
-      clickPower += 5;
-    } else if (type === "x2") {
-      clickPower *= 2;
+    switch (type) {
+      case "add1":
+        cost = 10 * (upgrades.add1 || 1);
+        effect = 1;
+        if (clicks >= cost) {
+          clicks -= cost;
+          clickPower += effect;
+          upgrades.add1 = (upgrades.add1 || 1) + 1;
+        }
+        break;
+      case "add5":
+        cost = 40 * (upgrades.add5 || 1);
+        effect = 5;
+        if (clicks >= cost) {
+          clicks -= cost;
+          clickPower += effect;
+          upgrades.add5 = (upgrades.add5 || 1) + 1;
+        }
+        break;
+      case "x2":
+        cost = 100 * (upgrades.x2 || 1);
+        if (clicks >= cost) {
+          clicks -= cost;
+          clickPower *= 2;
+          upgrades.x2 = (upgrades.x2 || 1) + 1;
+        }
+        break;
     }
 
-    upgradeLevels[type] += 1;
-
-    localStorage.setItem("clickCount", count);
-    localStorage.setItem("clickPower", clickPower);
-    localStorage.setItem("upgradeLevels", JSON.stringify(upgradeLevels));
-    notify(`Улучшение "${type}" куплено!`);
     updateDisplay();
-  } else {
-    notify(`Нужно ${price} кликов для покупки`);
-  }
-}
+    saveState();
+  });
+});
 
-function updateUpgradeButtons() {
-  for (const type in upgradeLevels) {
-    const btn = document.querySelector(`[data-upgrade="${type}"]`);
-    const level = upgradeLevels[type];
-    const price = calculatePrice(basePrices[type], level);
-    let label = "";
-    if (type === "add1") label = `+1 клик (${price} кликов)`;
-    else if (type === "add5") label = `+5 кликов (${price} кликов)`;
-    else if (type === "x2") label = `x2 сила (${price} кликов)`;
-    btn.textContent = label;
-  }
+function formatTimeLeft(ms) {
+  const s = Math.floor(ms / 1000);
+  const h = Math.floor(s / 3600).toString().padStart(2, '0');
+  const m = Math.floor((s % 3600) / 60).toString().padStart(2, '0');
+  const sec = (s % 60).toString().padStart(2, '0');
+  return `${h}:${m}:${sec}`;
 }
 
 function updateChestStatus() {
-  const chestStatus = document.getElementById("chestStatus");
   const now = new Date();
-
   if (!lastChestOpen) {
     chestStatus.textContent = "Сундук доступен!";
     chestDiv.classList.remove("open");
@@ -106,38 +95,18 @@ function updateChestStatus() {
   }
 }
 
-function openChest() {
+chestDiv.addEventListener("click", () => {
   const now = new Date();
-
-  if (!lastChestOpen || (now - new Date(lastChestOpen)) >= 86400000) {
-    const bonus = Math.floor(Math.random() * 20) + 10;
-    count += bonus;
+  const last = lastChestOpen ? new Date(lastChestOpen) : null;
+  if (!last || now - last >= 86400000) {
+    clicks += 100;
     lastChestOpen = now.toISOString();
-    localStorage.setItem("clickCount", count);
-    localStorage.setItem("lastChestOpen", lastChestOpen);
-    notify(`Вы получили ${bonus} кликов из сундука! 🎁`);
     updateDisplay();
-    chestDiv.classList.add("open");
-  } else {
-    const last = new Date(lastChestOpen);
-    const timeLeft = 86400000 - (now - last);
-    notify(`Сундук будет доступен через ${formatTimeLeft(timeLeft)}`);
+    saveState();
   }
-}
-
-function notify(message) {
-  const note = document.getElementById("notification");
-  note.textContent = message;
-  note.classList.add("show");
-  setTimeout(() => note.classList.remove("show"), 3000);
-}
-
-document.getElementById("clickButton").addEventListener("click", increment);
-document.querySelectorAll("#upgrades button").forEach(btn => {
-  btn.addEventListener("click", () => buyUpgrade(btn.dataset.upgrade));
 });
-chestDiv.addEventListener("click", openChest);
 
-updateDisplay();
 setInterval(updateChestStatus, 1000);
 
+updateDisplay();
+updateChestStatus();
