@@ -124,3 +124,5 @@ const tg = window.Telegram.WebApp;
 if (tg) tg.expand();
 
 updateDisplay();
+
+setInterval(updateChestStatus, 1000);
