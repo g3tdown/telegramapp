@@ -26,10 +26,10 @@ body, html {
 
 
 #chest {
-  width: 141.8px;
-  height: 98.4px;
+  width: 141.8px;     /* 354.5 / 2.5 */
+  height: 98.4px;     /* 246 / 2.5 */
   background-image: url("images/cases.png");
-  background-size: 709px 246px;
+  background-size: 283.6px 98.4px; /* уменьшен весь спрайт */
   background-position: left center;
   background-repeat: no-repeat;
   cursor: pointer;
