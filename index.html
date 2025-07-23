@@ -2,38 +2,31 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Кликер с сундуком</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Кликер</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>Симулятор Кликера</h1>
-
   <div id="mainContainer">
-  <div id="leftSide">
-    <div id="chestSection">
-      <div id="chest" title="Кликни, чтобы открыть сундук"></div>
-      <p id="chestStatus"></p>
+    <div id="leftSide">
+      <div id="chestSection">
+        <div id="chest" title="Кликни, чтобы открыть сундук"></div>
+        <p id="chestStatus"></p>
+      </div>
+      <div id="upgrades">
+        <h2>Улучшения</h2>
+        <button data-upgrade="add1">+1 клик (10 кликов)</button>
+        <button data-upgrade="add5">+5 кликов (40 кликов)</button>
+        <button data-upgrade="x2">x2 сила (100 кликов)</button>
+      </div>
     </div>
-    <div id="upgrades">
-      <h2>Улучшения</h2>
-      <button data-upgrade="add1">+1 клик (10 кликов)</button>
-      <button data-upgrade="add5">+5 кликов (40 кликов)</button>
-      <button data-upgrade="x2">x2 сила (100 кликов)</button>
-    </div>
-  </div>
 
-  <div id="centerSide">
-    <div id="counterContainer">
+    <div id="centerSide">
       <div id="counter">0</div>
       <div id="clickPowerLabel">+1</div>
+      <button id="clickButton">🖱️</button>
     </div>
-    <button id="clickButton" title="Кликать">🖱️</button>
   </div>
-</div>
-
-
-  <div id="notification" class="hidden"></div>
 
   <script src="script.js"></script>
 </body>
