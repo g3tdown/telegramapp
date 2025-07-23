@@ -3,11 +3,12 @@ body {
   text-align: center;
   background: #f2f2f2;
   margin: 0;
-  padding: 50px;
+  padding: 30px;
 }
 
-h1 {
-  font-size: 2.5em;
+h1, h2 {
+  font-size: 2em;
+  margin-top: 30px;
 }
 
 #counter {
@@ -16,16 +17,22 @@ h1 {
 }
 
 button {
-  font-size: 1.5em;
-  padding: 15px 30px;
+  font-size: 1.2em;
+  padding: 10px 20px;
   border: none;
   background-color: #0088cc;
   color: white;
   border-radius: 10px;
   cursor: pointer;
+  margin: 10px;
   transition: background-color 0.2s;
 }
 
 button:hover {
   background-color: #0077b3;
+}
+
+#chestStatus {
+  margin-top: 10px;
+  font-size: 1em;
 }
