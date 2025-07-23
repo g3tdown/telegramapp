@@ -10,6 +10,13 @@ let upgradePrices = JSON.parse(localStorage.getItem("upgradePrices")) || {
 
 const chestDiv = document.getElementById("chest");
 
+function formatTime(date) {
+  const h = date.getHours().toString().padStart(2, '0');
+  const m = date.getMinutes().toString().padStart(2, '0');
+  const s = date.getSeconds().toString().padStart(2, '0');
+  return `${h}:${m}:${s}`;
+}
+
 function updateDisplay() {
   document.getElementById("counter").textContent = count;
   document.getElementById("clickPowerLabel").textContent = `+${clickPower}`;
@@ -58,8 +65,32 @@ function updateUpgradeButtons() {
   document.querySelector('[data-upgrade="x2"]').textContent = `x2 сила (${upgradePrices.x2} кликов)`;
 }
 
+function updateChestStatus() {
+  const chestStatus = document.getElementById("chestStatus");
+  const now = new Date();
+
+  if (!lastChestOpen) {
+    chestStatus.textContent = "Сундук доступен!";
+    chestDiv.classList.remove("open");
+    return;
+  }
+
+  const last = new Date(lastChestOpen);
+  const diff = now - last;
+
+  if (diff >= 86400000) { // прошло 24 часа
+    chestStatus.textContent = "Сундук доступен!";
+    chestDiv.classList.remove("open");
+  } else {
+    const nextOpenTime = new Date(last.getTime() + 86400000);
+    chestStatus.textContent = `Сундук будет доступен в ${formatTime(nextOpenTime)}`;
+    chestDiv.classList.add("open");
+  }
+}
+
 function openChest() {
   const now = new Date();
+
   if (!lastChestOpen || (now - new Date(lastChestOpen)) >= 86400000) {
     const bonus = Math.floor(Math.random() * 20) + 10; // 10–30
     count += bonus;
@@ -68,37 +99,11 @@ function openChest() {
     localStorage.setItem("lastChestOpen", lastChestOpen);
     notify(`Вы получили ${bonus} кликов из сундука! 🎁`);
     updateDisplay();
-    showChestOpen(true);
-  } else {
-    const hoursLeft = Math.ceil((86400000 - (now - new Date(lastChestOpen))) / 3600000);
-    notify(`Сундук будет доступен через ~${hoursLeft} ч.`);
-    showChestOpen(false);
-  }
-}
-
-function showChestOpen(opened) {
-  if (opened) {
     chestDiv.classList.add("open");
-    setTimeout(() => chestDiv.classList.remove("open"), 3000);
   } else {
-    chestDiv.classList.remove("open");
-  }
-}
-
-function updateChestStatus() {
-  if (!lastChestOpen) {
-    document.getElementById("chestStatus").textContent = "Сундук доступен!";
-    return;
-  }
-
-  const now = new Date();
-  const diff = now - new Date(lastChestOpen);
-
-  if (diff >= 86400000) {
-    document.getElementById("chestStatus").textContent = "Сундук доступен!";
-  } else {
-    const hoursLeft = Math.ceil((86400000 - diff) / 3600000);
-    document.getElementById("chestStatus").textContent = `Осталось: ~${hoursLeft} ч.`;
+    const last = new Date(lastChestOpen);
+    const nextOpenTime = new Date(last.getTime() + 86400000);
+    notify(`Сундук будет доступен в ${formatTime(nextOpenTime)}`);
   }
 }
 
@@ -116,6 +121,6 @@ document.querySelectorAll("#upgrades button").forEach(btn => {
 chestDiv.addEventListener("click", openChest);
 
 const tg = window.Telegram.WebApp;
-tg.expand();
+if (tg) tg.expand();
 
 updateDisplay();
