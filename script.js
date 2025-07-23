@@ -20,9 +20,10 @@ function buyUpgrade() {
     clickPower++;
     localStorage.setItem("clickCount", count);
     localStorage.setItem("clickPower", clickPower);
+    showNotification("Апгрейд куплен! 💪");
     updateDisplay();
   } else {
-    alert("Недостаточно кликов!");
+    showNotification("Недостаточно кликов!");
   }
 }
 
@@ -34,11 +35,11 @@ function openChest() {
     lastChestOpen = now.toISOString();
     localStorage.setItem("clickCount", count);
     localStorage.setItem("lastChestOpen", lastChestOpen);
-    alert(`Вы получили ${bonus} кликов из сундука!`);
+    showNotification(`Вы получили ${bonus} кликов из сундука! 🎁`);
     updateDisplay();
   } else {
     const hoursLeft = Math.ceil((86400000 - (now - new Date(lastChestOpen))) / 3600000);
-    alert(`Сундук будет доступен через ~${hoursLeft} ч.`);
+    showNotification(`Сундук будет доступен через ~${hoursLeft} ч.`);
   }
 }
 
@@ -59,6 +60,16 @@ function updateChestStatus() {
   }
 }
 
+function showNotification(message) {
+  const note = document.getElementById("notification");
+  note.textContent = message;
+  note.classList.add("show");
+
+  setTimeout(() => {
+    note.classList.remove("show");
+  }, 3000);
+}
+
 document.getElementById("clickButton").addEventListener("click", increment);
 document.getElementById("upgradeButton").addEventListener("click", buyUpgrade);
 document.getElementById("chestButton").addEventListener("click", openChest);
@@ -68,3 +79,4 @@ updateDisplay();
 // Telegram WebApp SDK
 const tg = window.Telegram.WebApp;
 tg.expand();
+
